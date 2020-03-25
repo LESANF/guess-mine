@@ -1,0 +1,26 @@
+서버셋팅부터 시작
+
+src폴더생성 -> yarn init으로 package.json에 적힐 내용적기.
+
+nodemon설치 yarn add nodemon
+
+그리고 express설치 yarn add express
+
+또, yarn add socket.io
+
+이제 js파일을 만듦. server.js
+
+import ~~~express 해주고.
+
+package.json으로 가서 실행 script적어주기.
+
+재실행해줄거고 최신코드를 쓸거니 nodemon과 @babel/node설치
+
+@babel/core, @babel/preset-env 역시 설치해주고
+
+.babelrc 파일을 만들어서 preset-env를 추가시켜줌.
+
+js파일에는 express가 import되있어야함 반드시.
+
+--------------------------------------------------- 1.0 END--
+
