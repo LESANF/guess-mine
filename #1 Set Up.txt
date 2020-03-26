@@ -24,3 +24,41 @@ js파일에는 express가 import되있어야함 반드시.
 
 --------------------------------------------------- 1.0 END--
 
+서버를 셋팅할껀데 
+
+server, pug, static, socketIO 까지 총 4개의 셋팅을해줘야함.
+
+< server >
+
+const app = express();
+
+app.listen(4000) 
+
+< pug >
+
+npm i pug 후 
+
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views")); 추가.
+
+src에 넣어놔서 views폴더를 찾게해줘야함. 
+
+path를 쓰기위해 import path from "path"
+
+views폴더를 만들고 템플릿 pug를 만들어줌.
+
+app.get("/", (req,res) => res.render("home");}); 으로 렌더페이지 넘겨줌.
+
+< static >
+
+폴더를 만들고 app.use(express.static(path.join(__dirname, "static")));
+
+다음과같이 __dirname = 디렉토리 네임 그리고 폴더명 static을 넘겨줌
+
+이건 디렉토리에서 file을 보내주는 middleware임.
+
+controller나 view를 확인하지않고 파일만 확인하는거임
+
+static 폴더에 index.js파일을 생성하고 test; 라고 남겨두고
+
+localhost:4000/index.js로 접근하면 test;라는 text가 보임.
