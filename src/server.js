@@ -10,6 +10,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(logger("dev"));
 app.use(express.static(path.join(__dirname, "static")));
 
+app.get("/favicon.ico", (req, res) => res.status(204));
 app.get("/", (req, res) => {
   res.render("home");
 });
@@ -21,4 +22,8 @@ const server = app.listen(PORT, handleListening);
 
 const io = socketIO.listen(server);
 
-io.on("connection", () => console.log("Somebody Connected"));
+let sockets = [];
+
+io.on("connection", socket => sockets.push(socket.id));
+
+setInterval(() => console.log(sockets), 1000);
