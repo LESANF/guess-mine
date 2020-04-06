@@ -1,0 +1,6 @@
+const server = app.listen(PORT, handleListening);
+
+다음과같이 server라는 변수를 만들었고 거기에 app.listen을 담았음.
+
+왜냐하면 이 server를 SocketIO에 전달하기 위해서임.
+
