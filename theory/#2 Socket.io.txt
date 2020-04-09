@@ -81,4 +81,53 @@ idnex.js에 io("/"); 를 입력해줌.
 
 =====================#2.0 END=================================
 
+socketIO 의 hello world는 caht application임.
+
+2개의 이벤트가 필요함 ( 유저가 메시지를 보내는 이벤트, 다른 유저가 join하는 이벤트 )
+
+백엔드에서 프론트엔드로 어떻게 이벤트를 보내는지 알아보자.
+
+누군가가 SocketIO에 연결되면 연결된 Socket를 SocketIO로 가져와서 메시지를 보낼거임.
+
+js파일. 클라이언트부분. io("/")를 const socket으로 담자.
+
+그리고 socket.on, socket.emit으로 처리함.
+
+emit은 방출하다는 뜻이고 이벤트를 보내는것. 그리고 on을 사용해 보낸 이벤트를 받음.
+
+socket.emit("hello")로 hello라는 이벤트를 서버에 보내보자. 
+
+server에서 socket.on("hello", function) 으로 hello라는 이벤트르 받고 function을 실행하면됨.
+
+서버 -> 클라이언트, 클라이언트 -> 서버 상관없이 모두 가능함.
+
+https://naem1023.tistory.com/121 (기본동작 방법)
+
+여러개의 socket이 연결되어있을때 broadcast.emit으로 보낼 수 있다. 현재 연결된 소켓을 제외한 나머지 소켓에 보내는 방법임.
+
+창을 2개 띄웠을 때, 다른한쪽에서 broadcast.emit으로 이벤트를 보내고 on으로 받으면 현재 연결된 경로를 제외한 socket들이 이벤트를 받는거임.
+
+============================#2.1 END=================================
+
+< 요약 >
+
+WebSocket 서버와 WebSocket1, 2, 3이 있다고 가정하자.
+
+매번 Socket이 연결될 때 마다 Connection이라는 이벤트를 서버가 수신한다. [ on("connection") ] 처럼.
+
+앞선 예제에서는 기존 express 서버를 server라는 변수에 닮았고 그걸 다시 socketIO.listen(server)로 담아서 io라는 변수로 선언했다. 
+
+io라는 변수가 io.on("connection")으로 이벤트를 받음. 서버와 클라이언트를 잘 구분하자. 
+
+이 연결은 계속 살아있고 서버가 연결을 끊거나 유저가 offline이 될 때 죽는다. ( 클라이언트가 연결을 끊거나 or 서버가 연결을 끊거나 )
+
+다른 WebSocket이 서버와 연결될 때, 우리는 socket이라는 변수를 받아올 수 있음 ( addEventListener의 매개변수로 e를 받아오는것과 비슷함 )
+
+우리는 socket을 통해 상호작용할 수 있고, 많은 것들에 접근할 수 있음.
+
+그중하나가 emit임. 또 다른 하나는 broadcast.
+
+emit은 기본적으로 이벤트를 보내고, 연결된 Socket에 이벤트를보냄. 만약 이벤트이름이 hello면 연결된 socket에만 hello이벤트가 간다.
+
+하지만 현재 연결된 socket을 제외한 모든 socket에 이벤트를 보내는 방법이있음. 이것이 broadcast이다.
 
