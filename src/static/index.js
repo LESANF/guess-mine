@@ -1,6 +1,13 @@
 // eslint-disable-next-line no-undef
 const socket = io("/");
 
-socket.on("hello", () => console.log("hi Client"));
+function sendMessage(message) {
+  socket.emit("newMessage", { message });
+}
 
-socket.emit("hello2");
+function handleMessageNotif(data) {
+  const { message } = data;
+  console.log(`somebody said ${message}`);
+}
+
+socket.on("messageNotif", handleMessageNotif);

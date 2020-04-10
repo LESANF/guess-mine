@@ -23,5 +23,7 @@ const server = app.listen(PORT, handleListening);
 const io = socketIO.listen(server);
 
 io.on("connection", (socket) => {
-  socket.on("hello2", () => console.log("hi server"));
+  socket.on("newMessage", ({ message }) => {
+    socket.broadcast.emit("messageNotif", { message });
+  });
 });
