@@ -149,6 +149,76 @@ chat application으로 예를 들자.
 
 ============================#2.2 END==================================
 
+< server.js 백엔드 서버 >
+
+io.on("connection", (socket) => {
+  socket.on("newMessage", ({ message }) => {
+    socket.broadcast.emit("messageNotif", {
+      message,
+      nickname: socket.nickname || "Anon",
+    });
+  });
+  socket.on("setNickname", ({ nickname }) => {
+    // eslint-disable-next-line no-param-reassign
+    socket.nickname = nickname;
+  });
+});
 
 
+< index.js 프론트 웹클라이언트 > 
 
+const socket = io("/");
+
+function sendMessage(message) {
+  socket.emit("newMessage", { message });
+  console.log(`You: ${message}`);
+}
+
+function setNickname(nickname) {
+  socket.emit("setNickname", { nickname });
+}
+
+function handleMessageNotif(data) {
+  const { message, nickname } = data;
+  console.log(`${nickname}: ${message}`);
+}
+
+socket.on("messageNotif", handleMessageNotif);
+
+===================================
+
+1. 다른사용자가 채팅(sendMessage)을 했을때 다른 창에서 상대방의 메시지보기
+
+2. nickname 설정.
+
+먼저 클라이언트에서 메시지를 보내는 이벤트를 발생시킴(emit).
+
+sendMessage라는 함수를 통해 시작된다.
+
+newMessage라는 이벤트를 방출, 인자로받은 message를 socket과 함께 넘겨줌.
+
+그리고 서버에서 socket.on("newMessage")를 통해 이벤트를 받고, socket을 타고 들어온 message를 사용한다.
+
+기본적으로 data에서 뽑아쓰며 {message}는 data의 message라는 뜻이다.
+
+newMessage를 받은 후, broadcast로 다시 emit시킨다. (message를 보낸사람을 제외한 사람들에게 message를 보여주기위함)
+
+messageNotif 이벤트를 방출함 방출할때는 기존에 받았던 message에 nickname을 포함해 이벤트를 방출시킴.
+
+다시 클라이언트로 돌아와 messageNotif를 받고, handleMessageNotif함수를 실행
+
+해당 함수는 socket을 통해 받은 data를 인자로 받고 data에 들어있는 message와 nickname을 가져와 클라이언트에 뿌려준다.
+
+현재 message를 보내는사람의 nickname을 정해주는 부분은 setNickname함수로 정해줄 수 있다.
+
+클라이언트에서 setNickname("LESA")로 LESA라는 string을 인자로 넘겨주고
+
+setNickname함수는 인자로받은 nickname을 이벤트를 발생시켜 넘겨줌. "setNickname"
+
+해당 setNickname 이벤트는 서버에서 on을하여 받고 인자로받은 nickname을 socket.nickname = nickname; 으로 넣어줌.
+
+socket은 객체이기때문에 socket.potato = 5 이런식으로 직접 정의해줄 수 있음.
+
+우리의경우 socket.nicname으로 정의해서 기존에 받은 nickname을 넣어줌.
+
+=======================#2.3 END==================
