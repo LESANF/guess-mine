@@ -24,6 +24,13 @@ const io = socketIO.listen(server);
 
 io.on("connection", (socket) => {
   socket.on("newMessage", ({ message }) => {
-    socket.broadcast.emit("messageNotif", { message });
+    socket.broadcast.emit("messageNotif", {
+      message,
+      nickname: socket.nickname || "Anon",
+    });
+  });
+  socket.on("setNickname", ({ nickname }) => {
+    // eslint-disable-next-line no-param-reassign
+    socket.nickname = nickname;
   });
 });
