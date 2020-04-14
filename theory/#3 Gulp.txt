@@ -12,7 +12,7 @@ gulp는 webpack보다 강력하지 않지만 충분히 좋다.
 
 gulp의 셋팅을보면 require로 이루어져있는데 세련된 import를 쓰기위해
 
-gulpfile.babel.js로 파일을 생성.
+gulpfile.babel.js로 파일을 생성. ( 파일명에 .bable을 해주는이유는 es6문법 쓰기위해서 / gulp가 찾아서 바꿔주는형식임)
 
 sass로 스타일링하기위해 assets폴더 생성, 그안에 scss폴더 그안에 styles.scss폴더 생성.
 
@@ -53,6 +53,79 @@ gulp를 먼저 호출하고 호출할 함수인 styles를 호출해준거임
 
 웹팩만큼 강력(웹팩이더 강력함)하면서도 코드 구성이 쉬움. 이게 gulp의 장점.
 
-======================3.0END gulp 설치&&셋팅==============
+======================3.0 END gulp 설치&&셋팅==============
+
+< gulp 추가셋팅 >
+
+scss에 관련된걸 추가 셋팅해줄거임. ( gulp-autoprefixer, gulp-csso )
+
+autoprefixer는 모든 브라우저에서의 호환성을 위하여 설치해줌.
+
+그리고 css코드의 경령화를 위한 작업 ( Minify CSS을 위해 csso사용 )
+
+위의 2개의 패키지는 모두 gulpfile.babel.js에서 import하여 사용함.
+
+적용은 아래와 같이 pipe로 적용.
+
+function styles() {
+  return gulp
+    .src(paths.styles.src)
+    .pipe(sass())
+    .pipe(
+      autoprefixer({
+        overrideBrowserslists: ["last 2 versions"],
+        cascade: false,
+      })
+    )
+    .pipe(minifyCSS())
+    .pipe(gulp.dest(paths.styles.dest));
+}
+
+
+minifyCSS는 csso를 import할때 붙여준 이름임 import minifyCSS from "gulp-csso"
+
+마찬가지로 autoprefixer도 위와같이 옵션을 줘서 셋팅함.
+
+이제 css관련 코드를 수정할때 gulp가 자동적으로 보는걸 해줘야함. gulp.watch()를 쓸거임.
+
+watchFiles라는 함수를 하나 만들어줌
+
+function watchFiles() {
+  gulp.watch(paths.styles.watch, styles);
+}
+
+paths로 선언한 styles객체에 watch를 추가시켜줌.
+
+watch: "assets/scss/**/*.scss" 이건 scss폴더의 확장자가 .scss인 모든파일을 보는 경로임
+
+watchFiles 함수를 실행시키기 위해 
+
+const dev = gulp.series([styles, watchFiles]); 
+
+dev라는 변수를 만들고 gulp.series 명령어를 담아줌. series는 배열형태여야함.
+
+dev는 styles함수와 watchFiles함수를 실행시킬거임.
+
+마지막으로 이 dev변수를 선언시키는 방법은.
+
+export default dev; 로 export default시키는거임.
+
+내가 package.json에서 다른명령어없이 gulp라는 커맨드를 실행했을 때 기본으로 dev를 실행하려고 하는부분.
+
+기존 명령어인 gulp styles는 gulp를 실행하고 그안에 styles를 실행시키는데 이제 gulp만 있어도 dev가 기본으로 실행됨.
+
+그래서 명령어를 바꿔줌 "dev:assets": "gulp"
+
+걸프는 웹팩보다 성능은 떨어지지만 css, js로 이루어진 웹사이트에는 gulp도 충분함.
+
+=============================#3.1 END==========================
+
+
+
+
+
+
+
+
 
 
