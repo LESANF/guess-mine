@@ -100,9 +100,9 @@ watch: "assets/scss/**/*.scss" 이건 scss폴더의 확장자가 .scss인 모든
 
 watchFiles 함수를 실행시키기 위해 
 
-const dev = gulp.series([styles, watchFiles]); 
+const dev = gulp.series(styles, watchFiles); 
 
-dev라는 변수를 만들고 gulp.series 명령어를 담아줌. series는 배열형태여야함.
+dev라는 변수를 만들고 gulp.series 명령어를 담아줌. 
 
 dev는 styles함수와 watchFiles함수를 실행시킬거임.
 
@@ -119,6 +119,8 @@ export default dev; 로 export default시키는거임.
 걸프는 웹팩보다 성능은 떨어지지만 css, js로 이루어진 웹사이트에는 gulp도 충분함.
 
 =============================#3.1 END==========================
+
+browserify 셋팅
 
 
 
