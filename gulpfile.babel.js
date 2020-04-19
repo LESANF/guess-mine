@@ -36,6 +36,7 @@ const styles = () =>
     )
     .pipe(minifyCSS())
     .pipe(gulp.dest(paths.styles.dest));
+
 const js = () =>
   gulp
     .src(paths.js.src)

@@ -140,11 +140,85 @@ browserify는 gulp에서 사용하려고 만들어짐.
 
 우리는 clean함수를 통해 src/static폴더를 날릴거임. 그렇기 때문에 assets에 js폴더를 만들고 main.js 파일을 생성.
 
+gulpfile.babel.js에 paths에 js를 처리할 경로를 추가해주자.
 
+js: {
+    src: "assets/js/main.js",
+    dest: "src/static/js",
+    watch: "assets/js/**/*.js",
+  }
 
+다음과같이 추가. src를 추가하는 부분은 파일 하나만 지정한다는거임.
 
+assets/js/main.js 에서 주의할점은 *.js라고 적으면안됨 이러면 모든 파일을 컴파일 하겠다는 뜻임.
 
+assets/js 의 경로에있는 main.js에 우리의 코드를 적어줌.
 
+import { handleMessageNotif } from "./chat";
 
+const socket = io("/");
 
+function sendMessage(message) {
+  socket.emit("newMessage", { message });
+  console.log(`You: ${message}`);
+}
+
+function setNickname(nickname) {
+  socket.emit("setNickname", { nickname });
+}
+
+socket.on("messageNotif", handleMessageNotif);
+
+이코드는 컴파일되어 종착역인 dest경로로 생성되는거임.
+
+이제 paths에 js파일을 처리할 위치와 경로를 설정해줬고 js파일을 다루는 함수를 만들자.
+
+const js = () =>
+  gulp
+    .src(paths.js.src)
+    .pipe(
+      bro({
+        transform: [
+          babel.configure({
+            presets: ["@babel/preset-env"],
+          }),
+        ],
+      })
+    )
+    .pipe(gulp.dest(paths.js.dest));
+
+여기서 bro는 우리가 import 한 browserify임. 정확하게는 gulp-browserify ( npm i gulp-browserify )
+
+gulp-broserify(bro)를 변환해주기위해 babelify또한 import한다 ( npm i babelify )
+
+bro에서 transform 옵션을주고 코드와같이 옵션을줌.
+
+그리고 수정될때마다 자동으로 gulp를 설정해주기위해 
+
+const watchFiles = () => {
+  gulp.watch(paths.styles.watch, styles);
+  gulp.watch(paths.js.watch, js);
+};
+
+다음과같이 js의 watch도 추가. 뒤에는 함수임
+
+앞서 assets/js/chat.js의 파일에서 가져온 handleMessageNotif 함수를 main.js에서 import하여 쓰는것은
+
+기본적으로 js에서 작동하지않음. 우리는 browserify를 쓰니까 가능한거임.
+
+지금 js파일을 저장하면 nodemon이 계속 자동시작될거임. 그래서 assets과 static에대해 ignore을 시켜줄거임.
+
+assets에서 파일이 변경될 때, 컴파일 될 때 총 2번의 변화가 일어나기때문에 assets, static을 무시시킴.
+
+"dev:server": "nodemon --exec babel-node src/server --ignore assets/ --ignore src/static",
+
+다음과같이 package.json에서 scripts를 수정해줌.
+
+또한 gulpfile.babel.js에서
+
+export const build = gulp.series(clean, styles, js);
+
+다음과같은 함수를 만들어서 간단하게 build 도가능함. watchFile은 안넣어줘도됨.
+
+==========================# 3.3 END ==========================
 
