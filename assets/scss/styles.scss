@@ -1,15 +1,61 @@
-@import "body";
-$color: red;
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700");
+@import "variables";
+@import "reset";
 
-@keyframes sexy {
-  from {
-    color: red;
-  }
-  to {
-    color: blue;
-  }
+* {
+  box-sizing: border-box;
+}
+
+button:focus {
+  outline: none;
+}
+
+html {
+  height: 100%;
 }
 
 body {
-  position: sticky;
+  background-color: $greyColor;
+  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+
+  // loginbox animation
+  .loginBox input[type="text"] {
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #3498db;
+    padding: 14px 10px;
+    width: 200px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+  }
+
+  .loginBox input[type="text"]:focus {
+    width: 280px;
+    border-color: #2ecc71;
+  }
+
+  .loginBox,
+  .gameContainer {
+    display: none;
+  }
+  &.loggedOut {
+    .loginBox {
+      display: block;
+    }
+  }
+  &.loggedIn {
+    .gameContainer {
+      display: block;
+    }
+  }
 }
