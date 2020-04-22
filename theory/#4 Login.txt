@@ -76,3 +76,129 @@ localStorage에 저장하기위해 settItem을 설정하고 key값은 NICKNAME, 
 그 후 body.className에 로그인 클래스를 추가시켜주자.
 
 ============================# 4.0 END ========================
+
+server.js 파일이 커질예정이니 분할해서 만들자. 
+
+src에 socketController.js 파일 생성
+
+기존 server.js에서 socket의 connection 부분을 분할로 만들어주자. 컨트롤러부분을 가져와서 쓸거임.
+
+io.on("connection", (socket) => {
+  socketController(socket);
+});
+
+이렇게 server.js에서 socketController를 가져와서 쓰는거임.
+
+----------------------------------------------------------------
+import events from "./events";
+
+const socketController = (socket) => {
+  socket.on(events.setNickname, ({ nickname }) => {
+    socket.nickname = nickname;
+  });
+};
+
+export default socketController;
+
+-----------------------------------------------------------------
+
+socketController.js에서 함수를 만들고 export default해서 server.js에서 사용한다.
+
+앞선 main.js에 있는 내용을 옮기자. assets/js/login.js 생성
+
+login.js에 모든 내용을 옮기고 main.js에는 import "./login"; 해준다.
+
+import하는 이유는 우리는 main.js 파일을 src경로로 보게 gulpfile.babel.js에서 셋팅해줬기때문.
+
+const logIn = nickname => {
+  const socket = io("/");
+  socket.emit("setNickname", { nickname });
+};
+
+socket 연결을하고 setNickname이라는 이벤트를 보냄 인자로받은 nickname의 내용을 포함시켜서.
+
+이게 login.js에서 추가된 logIn 함수임.
+
+로그인 되어있는 상태라고 하면, socket에 연결해주고 + 닉네임설정을 해줄거임.
+
+이 logIn함수를 쓰는작업은 form이 submit 이벤트를 발생시키고 나서 일어나야함.
+
+localStorage에 nickname에 대한 데이터가 있으면 login파트로 갈거임 아니면 nickname이 null이니까 loggedOut처리됨.
+
+직므 logIn() 함수안에서만 socket이 선언되어서 다른 함수에서 socket에 대해 접근을 못함.
+
+우리는 socket.on, socket.emit등 많이 호출해야되기때문에 socket 변수를 global화 시켜줄거임.
+
+그리고 submit후 logIn함수를 사용해야하니 handleFormSubmit 에서 logIn함수를 호출해줄거고
+
+인자로는 value를줌=(input.value).
+
+그리고 우리는 socketController.js에서 socketController 함수로 이이벤트를 on(받을거임).
+
+함수를 만들때 인자로는 socket을 받음 우리는 emit된걸 on으로 듣는 함수니 addEvent가 event 파라매터를 받는것처럼
+
+socket도 똑같이 받을 수 있음.
+
+받은 nickname변수를 socket.nickname으로 설정해주고 ( socket은 객체이기 때문에 .nickname으로 붙일 수 있음 )
+
+socket.nickname = nickname 으로 값을 넣어주자.
+
+서버를 실행하고 클라이언트에서 nickname을 설정하면 console.log(nickname)을 통해 터미널에 찍히는걸 확인가능.
+
+==================================# 4.1 END ===========================
+
+socket 이벤트에 대한 이름들은 어딘가에 표준화 되어있는게 좋음. 알아보기도 쉽고 이렇게 하지않으면 오타가 생길수도있음.
+
+src에 events.js 파일을 하나 생성.
+
+const events = {
+  setNickname: "setNickname",
+};
+
+export default events;
+
+setNickname 이벤트를 정의하고 export default했음.
+
+기존에 이벤트를 "setNickname" 이런식으로 적었다면 이제는 events.setNickname으로 설정할 수 있음.
+
+이방법은 백엔드에선 가능하나 프론트에서는 먹히지 않음.
+
+프론트에선 바로 import하여 쓸 수 없고, 서버에서 js를 보내야함 
+
+누군가 home으로 요청했을때 js코드를 같이 보내야함 클라이언트로(프론트)
+
+script.
+    window.events = !{events}
+
+home.pug에서 위와같이 scripts를 추가해줄거임.
+
+추가하고나서 클라이언트(웹페이지)로 가서 콘솔에 window.events를 치면 콘솔에서도 뜬다.
+
+이게 window에 global 변수를 만드는 방법임. 다른 모든 파일들도 접근할 수 있다.
+
+hoem.pug에 보내는 방법은 아래의 코드와 같다.
+
+app.get("/", (req, res) => {
+  res.render("home", { events: JSON.stringify(events) });
+});
+
+JSON.stringify해줘야함. "/"에 접근했을때 "home"을 render할거고 events를 넘겨줄거임.
+
+넘겨준 이벤트로 window.events해서 global화 되는거임.
+
+이렇게 설정해주면 서버와 클라이언트에서 한 파일을 같이 사용할 수 있음.
+
+이제 logIn 함수에서 "setNickname"을 쓰는대신에 window.events.setNickname을 쓸 수 있다.
+
+차이를 알아야함. socketController.js에선 events.setNickname으로 socket.on에 대하여 사용됐고
+
+logIn함수는 클라이언트에서 처리하는 부분이니 window.events.setNickname으로 처리했음.
+
+이로서 events에 대하여 공유하는 목표가 달성됨.
+
+두번째는 socket의 공유화에 대한건데 아까 logIn 함수내부에서 socket을 선언해서 다른 함수에서 간섭이안된다.
+
+이거에 대한 공유화는 모두 window.socket으로 바꿔주는거임 끝.
+
+확인방법은 main.js 파일로와서 console.log(window.socket)을 찍어보면 나옴.
+

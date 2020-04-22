@@ -1,5 +1,3 @@
-import events from "../../src/events";
-
 const body = document.querySelector("body");
 const loginForm = document.getElementById("jsLogin");
 
