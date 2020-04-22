@@ -2,6 +2,8 @@ import express from "express";
 import path from "path";
 import socketIO from "socket.io";
 import logger from "morgan";
+import socketController from "./socketController";
+import events from "./events";
 
 const PORT = 4000;
 const app = express();
@@ -12,7 +14,7 @@ app.use(express.static(path.join(__dirname, "static")));
 
 app.get("/favicon.ico", (req, res) => res.status(204));
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("home", { events: JSON.stringify(events) });
 });
 
 const handleListening = () =>
@@ -23,14 +25,5 @@ const server = app.listen(PORT, handleListening);
 const io = socketIO.listen(server);
 
 io.on("connection", (socket) => {
-  socket.on("newMessage", ({ message }) => {
-    socket.broadcast.emit("messageNotif", {
-      message,
-      nickname: socket.nickname || "Anon",
-    });
-  });
-  socket.on("setNickname", ({ nickname }) => {
-    // eslint-disable-next-line no-param-reassign
-    socket.nickname = nickname;
-  });
+  socketController(socket);
 });

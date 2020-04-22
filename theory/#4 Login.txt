@@ -1,0 +1,78 @@
+사용자가 로그인을 했는지, 했으면 게임을보여주는 flow를 만들어보자.
+
+로그인을 안했다면, 로그인 박스를 보여줘야한다.
+
+ body
+        .loginBox
+            form#jsLogin
+                input(placeholder="Decide your nickname 💬", type="text")
+        .gameContainer#jsGame
+            h1 You are logged in
+
+이렇게 loginbox div안에 form과 input 그리고 gameContainer를 보여줌.
+
+로그인했을때는 gameContainer 아닐시 loginBox.
+
+두개의 처리는 scss로 display : none으로 두개다 안보이게해둠.
+
+그리고 로그인 했을때, 안했을때 클래스를 추가시켜줄꺼임 
+ 
+ &.loggedOut {
+    .loginBox {
+      display: block;
+    }
+  }
+  &.loggedIn {
+    .gameContainer {
+      display: block;
+    }
+  }
+
+이런식으로. block처리를 하여 보이게 만들거임 loggedOut, loggedIn이라는 클래스명으로 구분하여.
+
+if (nickname === null) {
+  body.className = LOGGED_OUT;
+} else {
+  body.className = LOGGED_IN;
+}
+
+이렇게. nickname을 가져올거다 localStorage에서 getItem으로
+-> const nickname = localStorage.getItem(NICKNAME);
+
+const NICKNAME = "nickname" 으로 변수지정해둠.
+
+그리고 초기에 localStorage에서 NICKNAME이라는 key값으로 가져오면 아무것도 없기때문에 null임.
+
+로그인에대한 input값을 읽어야하기 때문에 함수를 만들어준다.
+
+const loginForm = document.getElementById("jsLogin");  form을 가져왔음 DOM형태로.
+
+if (loginForm) {
+  loginForm.addEventListener("submit", handleFormSubmit);
+}
+
+form이 존재하면 아래의 submit이벤트를 실행하고 handleFormSubmit함수를 실행.
+
+const handleFormSubmit = (e) => {
+  e.preventDefault();
+  const input = loginForm.querySelector("input");
+  const { value } = input;
+  input.value = "";
+  localStorage.setItem(NICKNAME, value);
+  body.className = LOGGED_IN;
+};
+
+
+event 매개변수를 가져와서 submit하고 페이지가 넘어가면안되니 e.preventDefault()를 사용.
+
+form안에 input이 있으니 DOM으로 가져오자.
+
+es6문법으로 input.value를 const { value } = input으로 정의함. value로 바로쓸 수 있음.
+
+입력이 끝나고 공백처리를 해주기위해 input.value = ""; 처리.
+
+localStorage에 저장하기위해 settItem을 설정하고 key값은 NICKNAME, 그리고 value는 input에서 입력한 value값.
+
+그 후 body.className에 로그인 클래스를 추가시켜주자.
+
+============================# 4.0 END ========================
