@@ -1,0 +1,117 @@
+누가 로그인 되었나 알림기능이 필요함. 
+
+알림기능은 누군가 입장하거나 로그아웃 했을 때 화면 아래 띄워줄 작은 창임.
+
+분할하여 하는게 좋은방법이므로, assets/js/notification.js 파일 생성.
+
+home.pug에 div#jsNotifications 로 div하나 생성하고
+
+notification.js 에서 id를 DOM형태로 가져옴.
+
+나를 제외한 모든이들에게 알림이 가야하니 broadcast방식을 써야함.
+
+socketController로 와서 나를 제외한 모든이들(broadcast)에게 메시지를 보내야함.
+
+socket.broadcast.emit(events.newUser, { nickname });
+
+다음과같은 코드를 socketController 함수에 넣음.
+
+여기에 쓰이는 newUser를 events.js에 추가해서 쓰자.
+
+socket에 이벤트를 전해줄때 원래 "name" 이런식으로 보내는데 관리에 용이하도록
+
+newUser : "newUser"로 정의하고 events.newUser 이렇게사용함.
+
+broadcast.emit으로 나를제외한 모든유저에게 이벤트를 방출시키고 그와 동시에 nickname 데이터도 넣어줌.
+
+------------------------------------------
+
+sockets용 파일을 하나 더만들거다 main.js에 import해주고 파일명은 sockets.js
+
+여기서는 모든 신청을 제어하는거임.
+
+< scokets.js 코드 >
+
+import { handleNewUser } from "./notifications";
+
+let socket = null;
+
+export const getSocket = () => socket;
+
+export const updateSocket = (aSocket) => {
+  socket = aSocket;
+};
+
+export const initSockets = (aSocket) => {
+  const { events } = window;
+
+  updateSocket(aSocket);
+  aSocket.on(events.newUser, handleNewUser);
+};
+
+-------------------------------------------------------
+
+현재 noticifations.js 의 코드는 아래와 같다.
+
+const notification = document.getElementById("jsNotifications");
+
+export const handleNewUser = ({ nickname }) => {
+  console.log(nickname, "just joined");
+};
+
+handleNewUser 함수가 실행되면 인자로 nickname을 받고 정확히는 data안의 nickname 
+
+저런 표현방식은 data.nickname으로 할 수있지만 {nickname}으로 꺼내쓴거임.
+
+해당 함수가 실행되면 파라메터로받은 nickname이 출력될거임.
+
+이함수는 export const되어 sockets.js에서 처리됨
+
+--------------------------------------------------------
+
+로그인한 순간에 initSockets(); 함수를 실행시켜준다.
+
+login.js에서 logIn함수임
+
+const logIn = (nickname) => {
+  // eslint-disable-next-line no-undef
+  const socket = io("/");
+  socket.emit(window.events.setNickname, { nickname });
+  initSockets(socket);
+};
+
+logIn이 일어나면 socket이 연결될거고 initSockets을통해 socket을 인자로 보내줌.
+
+현재 socket에 접근할때 global화 시켜줬으니 window.socket으로 사용되고있다.
+
+이렇게 사용해도되지만 더 명확하고 좋게쓰기위해 함수를통해 socket을 반환시켜줄거임.
+
+현재 sockets.js에 내부 코드에서
+
+export const getSocket = () => socket; 함수를 보자
+
+getSocket는 socket을 반환해줌 sockets.js에서 socket은 let socket = null; 이다. 아무것도 들어있지않음.
+
+그래서 이 socket을 바꿔주는 updateSocket 함수를 생성한다.
+
+export const updateSocket = (aSocket) => {
+  socket = aSocket;
+};
+
+updateSocket은 파라매터로 aSocket을 받고 기존에 null이었던 socket변수에 aSocket으로 바꿔준다.
+
+aSocket은 initSockets함수로 받아온 원래의 socket임. 변수명이 겹치니 aSocket으로 표기한거.
+
+initSockets 함수는 login.js에서 logIn 함수에서 로그인 될 때, socket을 인자로 받았음.
+
+initiSockets 함수를통해 aSocket.on으로 newUser 이벤트를 on(받으면) handleNewUser를 통해 broadcast되어 알림을 보낼수있음.
+
+이제부터 socket에 연결할때는 getSocket().emit 이런식으로 사용할 수 있음. 
+
+이미 로그인처리때부터 소켓으로 연결되고 그 socket을 받아 updateSocket으로 업데이트된 소켓이니.
+
+궁극적으로 이벤트 핸들링을 위한 별도의 sockets 파일도 만들었고 socket컨트롤을 할 별도의 파일도 있으니
+
+window.socket 이런식으로 해줄필요가 없는거다.
+
+================ 5.0 END ( Refactoring ) ====================
