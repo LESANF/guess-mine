@@ -115,3 +115,4 @@ initiSockets 함수를통해 aSocket.on으로 newUser 이벤트를 on(받으면)
 window.socket 이런식으로 해줄필요가 없는거다.
 
 ================ 5.0 END ( Refactoring ) ====================
+
