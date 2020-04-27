@@ -116,3 +116,6 @@ window.socket 이런식으로 해줄필요가 없는거다.
 
 ================ 5.0 END ( Refactoring ) ====================
 
+기존에 선언한 notifications, DOM으로 가져온걸 그냥 div지우고 body를 가져와서 body에 붙일거임
+
+->const body = document.querySelector("body");
