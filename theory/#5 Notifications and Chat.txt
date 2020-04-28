@@ -119,3 +119,62 @@ window.socket 이런식으로 해줄필요가 없는거다.
 기존에 선언한 notifications, DOM으로 가져온걸 그냥 div지우고 body를 가져와서 body에 붙일거임
 
 ->const body = document.querySelector("body");
+
+아래 코드는 리팩토리, connect&&disconnect에 대한 notifications.js에 code이다
+
+const body = document.querySelector("body");
+
+const fireNotification = (text, color) => {
+  const notification = document.createElement("div");
+  notification.innerText = text;
+  notification.style.backgroundColor = color;
+  notification.className = "notification";
+  body.appendChild(notification);
+};
+
+export const handleNewUser = ({ nickname }) =>
+  fireNotification(`${nickname} just joined!`, "rgb(0, 122, 255)");
+
+export const handleDisconnected = ({ nickname }) =>
+  fireNotification(`${nickname} just left!`, "rgb(255, 149, 0)");
+=============================================================
+
+fireNotification 함수는 text, color 의 2개의 인자를 받고 
+
+접속됐을때 handleNewUser, 끊겼을때 handleDisconnected 함수 실행. 
+
+위의 두 함수는 모두 nickname을 인자로 받고, fireNotificaton에 들어갈 text, color 인자를 넣어줌.
+
+fireNotification은 notification이라는 div를 생성하고 인자로받은 text, color를 적용.
+
+그리고 class부여 후 선언한 body에 붙여줌. notification의 css는 미리처리되어있음. scss/notifications.scss에
+
+disconnect에 대한 이벤트를 등록해야함.
+
+events.js로 이동하여   disconnected: "disconnected" 추가. 이렇게 하는이유는 직접 "disconnected"로 socket에 전달할 수 있지만
+
+오타방지와 분할정복으로 관리, 사용에 도움주기위해 별도로 만들어서 사용하는거임.
+
+하나 주의해야할건 우리가 만든 이벤트명이아니라 서버쪽에서 disconnect하는 기존이벤트다 "connection"처럼 "disconnect"임.
+
+이제 disconnect 됐을때, 나를제외한 모든 소켓들에게 끊기거나, 접속됐다고 알려야되기 때문에 broadcast방식으로 emit한다.
+
+broadcast를 간소화 하기위해 함수형으로 처리했음. 그리고 많이 쓰이기때문임.
+
+const broadcast = (event, data) => socket.broadcast.emit(event, data);
+
+이게 함수형 프로그래밍임.
+
+socket.on(events.disconnect, () => {
+    broadcast(events.disconnected, { nickname: socket.nickname });
+  });
+
+events.disconnect는 연결을 끊는 이벤트고 뒤의 disconnected는 직접만든 disconnected임.
+
+disconnect라는 끊김을위해 제공되는 이벤트를 on(들음)하게되면, broadcast로 나를 제외한 모든 소켓에게
+
+disconnected 이벤트와 nickname변수를 뿌려줌(emit).
+
+socket.js에서 initSockets를 통해 aSocket.on으로 disconnected를 듣고 handleDisconnected를 통해 이벤트가처리됨.
+
+===========================# 5.1 END======================
