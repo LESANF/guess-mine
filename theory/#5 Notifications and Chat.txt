@@ -178,3 +178,114 @@ disconnected 이벤트와 nickname변수를 뿌려줌(emit).
 socket.js에서 initSockets를 통해 aSocket.on으로 disconnected를 듣고 handleDisconnected를 통해 이벤트가처리됨.
 
 ===========================# 5.1 END======================
+
+메시지 처리 sendMsg, newMsg
+
+sendMsg로 이벤트를 발생시키고 newMsg로 broadcast처리하여 다른 socket에 메시지를 띄우는 형식이다.
+
+아래는 assets/js/chat.js 의 코드내용임
+
+import { getSocket } from "./sockets";
+
+const messages = document.getElementById("jsMessages");
+const sendMsg = document.getElementById("jsSendMsg");
+
+const appendMsg = (text, nickname) => {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <span class="author ${nickname ? "out" : "self"}">${
+    nickname ? nickname : "You"
+  } : </span> ${text}
+    `;
+  messages.appendChild(li);
+};
+
+const handleSendMsg = (e) => {
+  e.preventDefault();
+  const input = sendMsg.querySelector("input");
+  const { value } = input;
+  getSocket().emit(window.events.sendMsg, { message: value });
+  input.value = "";
+  appendMsg(value);
+};
+
+export const handleNewMessage = ({ message, nickname }) =>
+  appendMsg(message, nickname);
+
+if (sendMsg) {
+  sendMsg.addEventListener("submit", handleSendMsg);
+}
+
+===================================================
+
+채팅창, 채팅입력창을 만들어줘야 되므로 html도 손봐준다.
+
+.gameContainer#jsGame
+            .chat
+                ul.chat__messages#jsMessages
+                form.chat__form#jsSendMsg
+                    input(placeholder="Write a message", type="text")
+
+gameContainer에 다넣음.
+
+jsMessages와 jsSendMsg를 DOM형태로 가져옴.
+
+그리고 가져온 jsSendMsg가 존재하면 submit이벤트를 달고 handleSendMsg 함수를 실행
+
+SendMsg함수는 e.preventDefault();로 새로고침되는걸 방지해주고
+
+안에있는 input요소를 가져온다.
+
+getSocket() 함수는 socket을 반환해주는 함수임.
+
+sendMsg를 emit 해주고 message 객체를 보낸다 message에 들어갈 값은 input.value임.
+
+클라이언트에서 처리하는거니 window.events.sendMsg임.
+
+그리고 submit한후 메시지창을 비워야하니 공백으로 처리해주고 appendMsg 함수에 인자로 value를 넘긴다.
+
+그리고 appendMsg로 넘어가자
+
+const appendMsg = (text, nickname) => {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <span class="author ${nickname ? "out" : "self"}">${
+    nickname ? nickname : "You"
+  } : </span> ${text}
+    `;
+  messages.appendChild(li);
+};
+
+=========================================
+
+2가지로 나뉨 appendMsg(value), appendMsg(message, nickname).
+
+전자는 SendMsg로 인해 value값만 들어가고 nickname인자가 없으므로 You가 출력됨.
+
+뒤의경우는 handleNewMessage 함수에의해 nickname까지 들어옴.
+
+그리고 li.innerHTML로 인해 class가 author이고 nickname의 유무에따라 out, self의 클래스가 별도로 추가됨
+
+out, self의 구분으로 나 혹은 상대방의 이름에 색상이 입혀지는 css가 적용됨.
+
+이제 newMsg에 대한 처리를 할껀데 마찬가지로 모든 이벤트를 관리하기위해 events에서 객체화해줌.
+
+socketController에서 sendMsg에 대한 이벤트를 받으면(on)
+
+ socket.on(events.sendMsg, ({ message }) => {
+    broadcast(events.newMsg, { message, nickname: socket.nickname });
+  });
+
+broadcast처리해줄거임 broadcast는 함수화 되어있음 ( socket.broadcast.emit )
+
+newMsg 이벤트를 방출시키고 data로는 message와 nickname을 줌.
+
+이에 대한 데이터를 받는 부분과 무슨 어디에서 emit된걸 on으로 들은거냐면.
+
+getSocket().emit(window.events.sendMsg, { message: value }); ( handleSendMsg 함수 ) 를통해 처리됨.
+
+여기서 sendMsg이벤트를 방출시키고 socketController에서 on해서 처리됨.
+
+initSockets를 통하여 로그인할때 socket을 전달받고 그 소켓에 대하여
+
+events.newMsg, handleNewMessage가 처리되는거임. socket.js에서 리스닝하는거다.
