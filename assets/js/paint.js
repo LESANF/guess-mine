@@ -33,9 +33,14 @@ const beginPath = (x, y) => {
   ctx.moveTo(x, y);
 };
 
-const strokePath = (x, y) => {
+const strokePath = (x, y, color = null) => {
+  let currentColor = ctx.strokeStyle;
+  if (color !== null) {
+    ctx.strokeStyle = color;
+  }
   ctx.lineTo(x, y);
   ctx.stroke();
+  ctx.strokeStyle = currentColor;
 };
 
 function onMouseMove(event) {
@@ -46,7 +51,11 @@ function onMouseMove(event) {
     getSocket().emit(window.events.beginPath, { x, y });
   } else {
     strokePath(x, y);
-    getSocket().emit(window.events.strokePath, { x, y });
+    getSocket().emit(window.events.strokePath, {
+      x,
+      y,
+      color: ctx.strokeStyle,
+    });
   }
 }
 
@@ -69,6 +78,7 @@ function handleModeClick() {
 function handleCanvasClick() {
   if (filling) {
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    getSocket().emit(window.events.fill, { color: ctx.fillStyle });
   }
 }
 
@@ -94,4 +104,4 @@ if (mode) {
 }
 
 export const handleBeganPath = ({ x, y }) => beginPath(x, y);
-export const handleStrokedPath = ({ x, y }) => strokePath(x, y);
+export const handleStrokedPath = ({ x, y, color }) => strokePath(x, y, color);

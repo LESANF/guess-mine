@@ -1,0 +1,78 @@
+기존 js 강의에서 사용했던 painting을 그대로 가져와서 assets/js/paint.js로 이식함.
+
+그림판에 뭘 하던지간에 이벤트를 emit 해야함. 그림을 그리던 안그리던 그림판에 대해 일어나는 모든 일에대해 이벤트를 만들거임.
+
+function onMouseMove(event) {
+  const x = event.offsetX;
+  const y = event.offsetY;
+  if (!painting) {
+    beginPath(x, y);
+    getSocket().emit(window.events.beginPath, { x, y });
+  } else {
+    strokePath(x, y);
+    getSocket().emit(window.events.strokePath, { x, y });
+  }
+}
+
+다음과 같이 onMouseMove 함수에 getSocket() 함수로 emit해줌.
+
+선을 새로 만들면 이걸 서버쪽으로 스트리밍해줘야하고 서버쪽으로 이벤트를 보내주는거임.
+
+beginPath: "beginPath" 를 events.js에 추가해주고 코드에선 window로 접근해서 이벤트를준다. 클라이언트 부분이기때문.
+
+그리고 데이터는 x,y를줌. strokePath또한 추가해줌. 이제 emit하고있음.
+
+듣는부분 (on)은 socketController.js에서 처리.
+
+누군가 begin, stroke ( 그리기 시작했을때 ) 그리는 사람을 제외한 모든 소켓들은 그 그리는걸 봐야함.
+
+그렇기 때문에 events.beginPath와 events.strokePath가 on되면 각자 events.beganPath, events.strokedPath를 broadcast해줘야함.
+
+  socket.on(events.beginPath, ({ x, y }) =>
+    broadcast(events.beganPath, { x, y })
+  );
+
+  socket.on(events.strokePath, ({ x, y }) => {
+    broadcast(events.strokedPath, { x, y });
+  });
+
+위와같이 코드가 이루어짐.
+
+이건 두단계의 과정으로 나누어짐 첫번째 과정은 이벤트를 서버로 보내는거고, 두번째는 서버에서 이벤트를 리스닝해서 모두에게 broadcast해주는거.
+
+paint.js에서 2개의 함수를 만들어야함 began과 stroked에 대한 함수.
+
+export const handleBeganPath = ({ x, y }) => beginPath(x, y);
+export const handleStrokedPath = ({ x, y }) => strokePath(x, y);
+
+위의 두함수를 paint.js에 추가.
+
+이 이벤트관리는 sockets.js에서 처리함 왜냐면 sockets에서 이벤트 구독을 처리하고 있기때문.
+
+aSocket.on(events.beganPath, handleBeganPath);
+aSocket.on(events.strokedPath, handleStrokedPath);
+
+began과 stroked를 듣고 앞서쓴 두 함수를 사용해줌 ( sockets.js에서처리 )
+
+처리될 두 함수를 보면 beginPath와 strokePath 두함수가 또 있다.
+
+const beginPath = (x, y) => {
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+};
+
+const strokePath = (x, y) => {
+  ctx.lineTo(x, y);
+  ctx.stroke();
+};
+
+인자로 받은 x,y를 이용하여 처리해줌.
+
+서버에서 path가 시작되었다는 (beganPath) 이벤트를 받으면, beginPath 함수를 호출할거임.
+
+유저가 그림을 그리고 있지 않을 때 호출되는 beginPath랑 동일함. ( onMouseMove 의 함수와 동일 )
+
+지금 까지 했던 작업을 요약하자면 기본적으로 굉장히 많은 x, y좌표를 가져왔고 누군가 접속했을때 가져온 좌표를 전달해주는거임.
+
+=========================#6.0 END===================================
+
