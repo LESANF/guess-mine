@@ -76,3 +76,55 @@ const strokePath = (x, y) => {
 
 =========================#6.0 END===================================
 
+선색깔, 화면채우기 등을할건데 
+
+일단 채우기 events를 등록해주자
+
+fill: "fill",
+filled: "filled"
+
+이렇게 채우기 이벤트를 등록해주고 사용하면되고 stroked. 즉 선색깔 을 넘겨줘야함 
+
+paint.js에서 export const handleStrokedPath = ({ x, y, color }) => strokePath(x, y, color);
+
+다음과같이 함수 export
+
+socketController에서도   
+
+socket.on(events.strokePath, ({ x, y, color }) => {
+    broadcast(events.strokedPath, { x, y, color });
+  });
+
+이벤트를 받아줌 그리고 broadcast로 다른 소켓들에게도 선의 색깔을 보내줌.
+
+위의 handleStrokedPath의 경우 sockets.js에서 initSockets안에서 이벤트를 받아 처리해야함.
+
+const strokePath = (x, y, color = null) => {
+  let currentColor = ctx.strokeStyle;
+  if (color !== null) {
+    ctx.strokeStyle = color;
+  }
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.strokeStyle = currentColor;
+};
+
+strokePath의 함수를 자세히 살펴보자. strokedPath는 handleStrokedPath 함수에서 받은 파라매터로 처리하는 형식임.
+
+currentColor은 계속 변할거니 let으로 주고 color의 기본색상은 null로 넣어줌.
+
+color에 null을 준이유는 확실하게 체크하기위해서임. 만약 color를 인자로 받았으면
+
+if문이 진행될거다 조건이 color가 null이 아닐떄니까.
+
+그렇게되면 ctx.strokeStyle. 즉 현재 색상을 color로 값을 넣어주는거임.
+
+내가 그림을 그릴 때 x,y그리고 ctx의 strokeStyle정보도 보내는거임 보낸 이정보를 바탕으로 broadcast하여 상대방에게 색상도 전달함.
+
+이벤트를 실행할때마다 ctx(context)를 변경해주고 있음.
+
+하지만 다른사람이 그리는 것을 끝내면, 다시 자기원래의 context로 돌아가는거임 검은색으로.
+
+fill도 똑같음.
+
+========================# 6.1 END ===========================
