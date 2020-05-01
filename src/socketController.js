@@ -1,10 +1,13 @@
 import events from "./events";
 
+let sockets = [];
+
 const socketController = (socket) => {
   const broadcast = (event, data) => socket.broadcast.emit(event, data);
 
   socket.on(events.setNickname, ({ nickname }) => {
     socket.nickname = nickname;
+    sockets.push({ id: socket.id, points: 0, nickname });
     broadcast(events.newUser, { nickname });
   });
 
@@ -28,5 +31,7 @@ const socketController = (socket) => {
     broadcast(events.filled, { color });
   });
 };
+
+setInterval(() => console.log(sockets), 3000);
 
 export default socketController;
