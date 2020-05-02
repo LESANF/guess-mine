@@ -2,16 +2,16 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
   extends: ["airbnb-base", "prettier"],
   globals: {
     Atomics: "readonly",
-    SharedArrayBuffer: "readonly"
+    SharedArrayBuffer: "readonly",
   },
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: "module"
+    sourceType: "module",
   },
-  rules: { "no-console": "off" }
+  rules: { "no-console": "off", "no-param-reassign": [2, { props: false }] },
 };
