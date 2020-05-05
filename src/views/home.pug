@@ -11,27 +11,32 @@ html(lang="en")
         .loginBox
             form#jsLogin
                 input(placeholder="Decide your nickname 💬", type="text")
-        .gameContainer#jsGame
-            .main
+        .bigFrame
+            .firstFrame
+                h1 title
+            .secondFrame
                 #jsNotifs
-                canvas.canvas#jsCanvas
-                .controls#jsControls
-                    button#jsMode Fill
-                    .colors
-                        .color.jsColor(style="background-color:rgb(0, 0, 0)")
-                        .color.jsColor(style="background-color:rgb(255,255,255)")
-                        .color.jsColor(style="background-color:rgb(255,59,48)")
-                        .color.jsColor(style="background-color:rgb(255,149,0)")
-                        .color.jsColor(style="background-color:rgb(255,204,0)")
-                        .color.jsColor(style="background-color:rgb(76,217,100)")
-                        .color.jsColor(style="background-color:rgb(90,200,250)")
-                        .color.jsColor(style="background-color:rgb(0,122,255)")
-                        .color.jsColor(style="background-color:rgb(88,86,214)")
-            .chat
-                .player__board#jsPBoard
-                ul.chat__messages#jsMessages
-                form.chat__form#jsSendMsg
-                    input(placeholder="Write a message", type="text")
+            .gameContainer#jsGame
+                .user
+                    .player__board#jsPBoard
+                .main
+                    canvas.canvas#jsCanvas
+                    .controls#jsControls
+                        button#jsMode Fill
+                        .colors
+                            .color.jsColor(style="background-color:rgb(0, 0, 0)")
+                            .color.jsColor(style="background-color:rgb(255,255,255)")
+                            .color.jsColor(style="background-color:rgb(255,59,48)")
+                            .color.jsColor(style="background-color:rgb(255,149,0)")
+                            .color.jsColor(style="background-color:rgb(255,204,0)")
+                            .color.jsColor(style="background-color:rgb(76,217,100)")
+                            .color.jsColor(style="background-color:rgb(90,200,250)")
+                            .color.jsColor(style="background-color:rgb(0,122,255)")
+                            .color.jsColor(style="background-color:rgb(88,86,214)")
+                .chat
+                    ul.chat__messages#jsMessages
+                    form.chat__form#jsSendMsg
+                        input(placeholder="Write a message", type="text")
         script.
             window.events = !{events}
         script(src="/socket.io/socket.io.js")
