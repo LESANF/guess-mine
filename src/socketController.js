@@ -1,5 +1,6 @@
 import events from "./events";
 import { chooseWord } from "./words";
+// import { clear } from "../assets/js/paint";
 
 let sockets = [];
 let inProgress = false;
@@ -97,6 +98,10 @@ const socketController = (socket, io) => {
 
   socket.on(events.fill, ({ color }) => {
     broadcast(events.filled, { color });
+  });
+
+  socket.on(events.clearCanvas, () => {
+    broadcast(events.clearedCanvas);
   });
 };
 

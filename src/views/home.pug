@@ -22,7 +22,10 @@ html(lang="en")
                 .main
                     canvas.canvas#jsCanvas
                     .controls#jsControls
-                        button#jsMode Fill
+                        .buttonFrame
+                            button.currentPos.penButton#jsMode 
+                            button.fillButton#jsFill
+                            button.eraserButton#jsClear
                         .colors
                             .color.jsColor(style="background-color:rgb(0, 0, 0)")
                             .color.jsColor(style="background-color:rgb(255,255,255)")

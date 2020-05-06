@@ -16,6 +16,8 @@ const events = {
   leaderNotif: "leaderNotif",
   gameEnded: "gameEnded",
   gameStarting: "gameStarting",
+  clearCanvas: "clearCanvas",
+  clearedCanvas: "clearedCanvas",
 };
 
 export default events;
