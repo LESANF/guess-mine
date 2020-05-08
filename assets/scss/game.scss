@@ -32,6 +32,9 @@
       display: flex;
       align-items: center;
       flex-direction: column;
+      .currentPos {
+        animation: spin 1s linear infinite;
+      }
       .colors {
         margin: 20px;
         display: flex;
@@ -76,6 +79,7 @@
         .currentPos {
           animation: spin 1s linear infinite;
         }
+
         .penButton {
           background-image: url("../photos/greenPen.png");
           background-size: cover;

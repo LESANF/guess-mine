@@ -25,6 +25,7 @@ let painting = false;
 let filling = false;
 let currentPencil = false;
 let currentFill = false;
+let colorPic = false;
 
 const stopPainting = () => {
   painting = false;
@@ -67,8 +68,19 @@ const onMouseMove = (event) => {
   }
 };
 
+const clearEffect = () => {
+  const ary = Array.from(colors);
+  ary.map((element) => {
+    element.classList.toggle("currentPos", false);
+    return element;
+  });
+};
+
 const handleColorClick = (event) => {
+  clearEffect();
   const color = event.target.style.backgroundColor;
+  const { target } = event;
+  target.classList.toggle("currentPos", true);
   ctx.strokeStyle = color;
   ctx.fillStyle = color;
 };
