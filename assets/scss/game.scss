@@ -27,7 +27,6 @@
       height: 600px;
     }
     .controls {
-      background-color: grey;
       margin-top: 5px;
       display: flex;
       align-items: center;
@@ -35,7 +34,14 @@
       .currentPos {
         animation: spin 1s linear infinite;
       }
+
       .colors {
+        .lastColor {
+          margin-right: 0;
+        }
+        border-radius: 35px;
+        padding: 10px;
+        background-color: #9c88ff;
         margin: 20px;
         display: flex;
         &:hover .color {
@@ -64,7 +70,9 @@
         }
       }
       .buttonFrame {
-        background-color: grey;
+        border-radius: 35px;
+        padding: 5px 10px;
+        background-color: #9c88ff;
         display: flex;
 
         @keyframes spin {
