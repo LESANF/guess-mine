@@ -15,7 +15,7 @@ const addPlayers = (players) => {
   players.forEach((player) => {
     const playerElement = document.createElement("div");
     playerElement.className = "btn";
-    playerElement.innerText = `${player.nickname}: ${player.points}`;
+    playerElement.innerHTML = `<div>Player: ${player.nickname}</div><div>Points: ${player.points}</div>`;
     board.appendChild(playerElement);
   });
 };

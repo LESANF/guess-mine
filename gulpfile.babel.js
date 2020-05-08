@@ -19,9 +19,16 @@ const paths = {
     dest: "src/static/js",
     watch: "assets/js/**/*.js",
   },
+  image: {
+    src: "images/*",
+    dest: "src/static/photos",
+  },
 };
 
 const clean = () => del(["src/static"]);
+
+const imageFile = () =>
+  gulp.src(paths.image.src).pipe(gulp.dest(paths.image.dest));
 
 const styles = () =>
   gulp
@@ -56,8 +63,8 @@ const watchFiles = () => {
   gulp.watch(paths.js.watch, js);
 };
 
-const dev = gulp.series(clean, styles, js, watchFiles);
+const dev = gulp.series(clean, styles, js, imageFile, watchFiles);
 
-export const build = gulp.series(clean, styles, js);
+export const build = gulp.series(clean, styles, js, imageFile);
 
 export default dev;

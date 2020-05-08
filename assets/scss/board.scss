@@ -1,32 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Indie+Flower&display=swap");
+
 .player__board {
   flex-direction: column;
   width: 200px;
   div {
-    background-color: white;
-    padding: 10px;
-    text-align: center;
-    margin-right: 20px;
-    margin-bottom: 7px;
     width: 100%;
     &:last-child {
       margin-right: 0;
     }
   }
   .btn {
+    margin-bottom: 10px;
+    color: khaki;
+    text-align: left;
     border-radius: 12px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 200px;
-    height: 60px;
+    flex-direction: column;
+    width: 250px;
+    height: 70px;
     background: none;
     border: 4px solid;
-    color: #7bed9f;
+    background-color: #fda7df;
     font-weight: 700;
     text-transform: uppercase;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    font-family: "Gamja Flower", cursive;
     position: relative;
+    div {
+      color: black;
+      margin-left: 20%;
+      height: 20px;
+      &:first-child {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 3px;
+      }
+    }
   }
 
   .btn::before,
@@ -35,7 +46,7 @@
     position: absolute;
     width: 14px;
     height: 4px;
-    background: #2ed573;
+    background: #d980fa;
     transform: skewX(50deg);
     transition: 0.4s linear;
   }

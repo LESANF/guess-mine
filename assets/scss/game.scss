@@ -7,7 +7,7 @@
   display: flex;
   width: 100%;
   margin: 0;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   .canvas,
   .chatMessages {
@@ -17,18 +17,18 @@
   }
   .user {
     height: 600px;
-    width: 200px;
-    background-color: #201535;
-    margin-right: 10px;
+    width: 250px;
+    // background-color: #201535;
   }
   .main {
-    margin-right: 10px;
     #jsCanvas {
-      width: 600px;
+      cursor: url("../photos/Santa.cur"), default;
+      width: 1000px;
       height: 600px;
     }
     .controls {
-      margin-top: 25px;
+      background-color: grey;
+      margin-top: 5px;
       display: flex;
       align-items: center;
       flex-direction: column;
@@ -61,6 +61,7 @@
         }
       }
       .buttonFrame {
+        background-color: grey;
         display: flex;
 
         @keyframes spin {
@@ -76,7 +77,7 @@
           animation: spin 1s linear infinite;
         }
         .penButton {
-          background-image: url("../greenPen.png");
+          background-image: url("../photos/greenPen.png");
           background-size: cover;
           border: none;
           border-radius: 30px;
@@ -90,7 +91,7 @@
           }
         }
         .fillButton {
-          background-image: url("../greenFill.png");
+          background-image: url("../photos/greenFill.png");
           background-size: cover;
           border: none;
           border-radius: 30px;
@@ -104,7 +105,7 @@
           }
         }
         .eraserButton {
-          background-image: url("../eraser.png");
+          background-image: url("../photos/eraser.png");
           background-size: cover;
           border: none;
           border-radius: 30px;
@@ -120,6 +121,6 @@
     }
   }
   .chat {
-    width: 300px;
+    width: 360px;
   }
 }

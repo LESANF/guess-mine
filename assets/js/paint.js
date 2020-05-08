@@ -9,13 +9,14 @@ const fillCanvas = document.getElementById("jsFill");
 const clearCanvas = document.getElementById("jsClear");
 
 const INITIAL_COLOR = "#2c2c2c";
-const CANVAS_SIZE = 600;
+const CANVAS_SIZE_WIDTH = 1000;
+const CANVAS_SIZE_HEIGHT = 600;
 
-canvas.width = CANVAS_SIZE;
-canvas.height = CANVAS_SIZE;
+canvas.width = CANVAS_SIZE_WIDTH;
+canvas.height = CANVAS_SIZE_HEIGHT;
 
 ctx.fillStyle = "white";
-ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+ctx.fillRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT);
 ctx.strokeStyle = INITIAL_COLOR;
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
@@ -77,7 +78,7 @@ const fill = (color = null) => {
   if (color !== null) {
     ctx.fillStyle = color;
   }
-  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  ctx.fillRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT);
   ctx.fillStyle = currentColor;
 };
 
@@ -112,7 +113,7 @@ const handleFillCanvas = () => {
 };
 
 const clear = () => {
-  ctx.clearRect(0, 0, canvas.height, canvas.width);
+  ctx.clearRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT);
   getSocket().emit(window.events.clearCanvas);
 };
 
@@ -159,7 +160,7 @@ export const showControls = () => (controls.style.display = "flex");
 export const resetCanvas = () => fill("#fff");
 
 export const handleClearedCanvas = () =>
-  ctx.clearRect(0, 0, canvas.height, canvas.width);
+  ctx.clearRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT);
 
 if (canvas) {
   canvas.addEventListener("contextmenu", handleCM);
