@@ -7,6 +7,12 @@
   height: 50px;
   margin-bottom: 10px;
   .timeBox {
-    background-color: red;
+    display: none;
+    margin-right: 100px;
+    .timer {
+      width: 50px;
+      height: 50px;
+      color: black;
+    }
   }
 }

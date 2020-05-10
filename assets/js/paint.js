@@ -2,6 +2,7 @@ import { getSocket } from "./sockets";
 
 const canvas = document.getElementById("jsCanvas");
 const controls = document.getElementById("jsControls");
+const timebox = document.getElementById("timeBox");
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
 const mode = document.getElementById("jsMode");
@@ -168,6 +169,10 @@ export const enableCanvas = () => {
 export const hideControls = () => (controls.style.display = "none");
 
 export const showControls = () => (controls.style.display = "flex");
+
+export const showTimebox = () => (timebox.style.display = "flex");
+
+export const hideTimebox = () => (timebox.style.display = "none");
 
 export const resetCanvas = () => fill("#fff");
 

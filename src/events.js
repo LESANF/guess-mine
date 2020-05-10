@@ -18,6 +18,8 @@ const events = {
   gameStarting: "gameStarting",
   clearCanvas: "clearCanvas",
   clearedCanvas: "clearedCanvas",
+  timeCheck: "timeCheck",
+  timeChecked: "timeChecked",
 };
 
 export default events;
