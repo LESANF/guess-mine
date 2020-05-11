@@ -103,6 +103,10 @@ const socketController = (socket, io) => {
   socket.on(events.clearCanvas, () => {
     broadcast(events.clearedCanvas);
   });
+
+  socket.on(events.timeCheck, () => {
+    superBroadcast(events.timeChecked);
+  });
 };
 
 export default socketController;

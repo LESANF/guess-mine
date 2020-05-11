@@ -171,9 +171,7 @@ export const hideControls = () => (controls.style.display = "none");
 
 export const showControls = () => (controls.style.display = "flex");
 
-export const showTimebox = () => {
-  timebox.style.display = "flex";
-};
+export const showTimebox = () => (timebox.style.display = "flex");
 
 export const hideTimebox = () => (timebox.style.display = "none");
 

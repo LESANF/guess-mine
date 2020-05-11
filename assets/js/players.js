@@ -7,11 +7,16 @@ import {
   showTimebox,
   hideTimebox,
 } from "./paint";
+
 import { disableChat, enableChat } from "./chat";
+import { getSocket } from "./sockets";
 
 const board = document.getElementById("jsPBoard");
 const notifs = document.getElementById("jsNotifs");
 const timeCheck = document.getElementById("jsTimer");
+
+let x;
+let time;
 
 const addPlayers = (players) => {
   board.innerHTML = "";
@@ -40,36 +45,44 @@ export const handleLeaderNotif = ({ word }) => {
   notifs.innerText = `You are the leader, paint: ${word}`;
 };
 
+const timeEnd = (timeFunc) => {
+  clearInterval(timeFunc);
+};
+
 export const handleGameEnded = () => {
+  time = 21;
   setNotifs("Game ended.");
+  timeEnd(x);
   disableCanvas();
   hideControls();
   hideTimebox();
   resetCanvas();
 };
 
-const timeEnd = (timeFunc) => {
-  clearInterval(timeFunc);
+const alertTime = () => {
+  getSocket().emit(window.events.timeCheck);
 };
 
 export const timer = () => {
-  let time = 21;
-  const x = setInterval(() => {
+  timeEnd(x);
+  console.log(time);
+  time = 21;
+  x = setInterval(() => {
     time--;
     timeCheck.innerHTML = `남은시간 : ${time}`;
     // eslint-disable-next-line no-plusplus
-    console.log(time);
     if (time < 0) {
+      time = 21;
       timeCheck.innerHTML = "시간초과";
       timeEnd(x);
-      // handleGameEnded();
     }
   }, 1000);
 };
 
 export const handleGameStarted = () => {
   setNotifs("");
-  timer();
+  showTimebox();
+  alertTime();
   disableCanvas();
   hideControls();
   enableChat();
