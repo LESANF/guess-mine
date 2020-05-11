@@ -5,24 +5,13 @@ import {
   showControls,
   resetCanvas,
   showTimebox,
+  hideTimebox,
 } from "./paint";
 import { disableChat, enableChat } from "./chat";
 
 const board = document.getElementById("jsPBoard");
 const notifs = document.getElementById("jsNotifs");
-const timeCheck = document.getElementById("timer");
-let time = 90;
-
-export const timer = () =>
-  setInterval(() => {
-    timeCheck.innerHTML = `남은시간 : ${time}`;
-    // eslint-disable-next-line no-plusplus
-    time--;
-    if (time < 0) {
-      clearInterval(timer);
-      timeCheck.innerHTML = "시간초과";
-    }
-  }, 1000);
+const timeCheck = document.getElementById("jsTimer");
 
 const addPlayers = (players) => {
   board.innerHTML = "";
@@ -43,13 +32,6 @@ const setNotifs = (text) => {
   notifs.innerText = text;
 };
 
-export const handleGameStarted = () => {
-  setNotifs("");
-  disableCanvas();
-  hideControls();
-  enableChat();
-};
-
 export const handleLeaderNotif = ({ word }) => {
   enableCanvas();
   showControls();
@@ -62,7 +44,35 @@ export const handleGameEnded = () => {
   setNotifs("Game ended.");
   disableCanvas();
   hideControls();
+  hideTimebox();
   resetCanvas();
+};
+
+const timeEnd = (timeFunc) => {
+  clearInterval(timeFunc);
+};
+
+export const timer = () => {
+  let time = 21;
+  const x = setInterval(() => {
+    time--;
+    timeCheck.innerHTML = `남은시간 : ${time}`;
+    // eslint-disable-next-line no-plusplus
+    console.log(time);
+    if (time < 0) {
+      timeCheck.innerHTML = "시간초과";
+      timeEnd(x);
+      // handleGameEnded();
+    }
+  }, 1000);
+};
+
+export const handleGameStarted = () => {
+  setNotifs("");
+  timer();
+  disableCanvas();
+  hideControls();
+  enableChat();
 };
 
 export const handleGameStarting = () => {

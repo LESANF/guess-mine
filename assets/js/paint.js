@@ -1,4 +1,5 @@
 import { getSocket } from "./sockets";
+import { timer } from "./players";
 
 const canvas = document.getElementById("jsCanvas");
 const controls = document.getElementById("jsControls");
@@ -170,7 +171,9 @@ export const hideControls = () => (controls.style.display = "none");
 
 export const showControls = () => (controls.style.display = "flex");
 
-export const showTimebox = () => (timebox.style.display = "flex");
+export const showTimebox = () => {
+  timebox.style.display = "flex";
+};
 
 export const hideTimebox = () => (timebox.style.display = "none");
 
