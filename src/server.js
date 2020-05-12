@@ -12,7 +12,6 @@ app.set("views", path.join(__dirname, "views"));
 app.use(logger("dev"));
 app.use(express.static(path.join(__dirname, "static")));
 
-app.get("/favicon.ico", (req, res) => res.status(204));
 app.get("/", (req, res) => {
   res.render("home", { events: JSON.stringify(events) });
 });
