@@ -23,7 +23,7 @@ const addPlayers = (players) => {
   players.forEach((player) => {
     const playerElement = document.createElement("div");
     playerElement.className = "btn";
-    playerElement.innerHTML = `<div>Player: ${player.nickname}</div><div>Points: ${player.points}</div>`;
+    playerElement.innerHTML = `<div>참가자: ${player.nickname}</div><div>점수: ${player.points}</div>`;
     board.appendChild(playerElement);
   });
 };
@@ -42,7 +42,7 @@ export const handleLeaderNotif = ({ word }) => {
   showControls();
   showTimebox();
   disableChat();
-  notifs.innerText = `You are the leader, paint: ${word}`;
+  notifs.innerText = `당신이 그릴 차례입니다 📢  【단어: ${word}】`;
 };
 
 const timeEnd = (timeFunc) => {
@@ -89,5 +89,5 @@ export const handleGameStarted = () => {
 };
 
 export const handleGameStarting = () => {
-  setNotifs("Game will start soon");
+  setNotifs("게임이 곧 시작됩니다 🎯");
 };

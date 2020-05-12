@@ -1,18 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap");
+
 .secondFrame {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: peru;
+  background-color: #a29bfe;
+  border-radius: 35px;
   width: 100%;
   height: 50px;
   margin-bottom: 10px;
+  color: #2d3436;
+  font-family: "Do Hyeon", sans-serif;
+  font-size: 25px;
   .timeBox {
     display: none;
     margin-right: 100px;
-    .timer {
-      width: 50px;
-      height: 50px;
-      color: black;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      margin-right: 10px;
     }
   }
 }
