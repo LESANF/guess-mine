@@ -28,7 +28,7 @@ const socketController = (socket, io) => {
         setTimeout(() => {
           superBroadcast(events.gameStarted);
           io.to(leader.id).emit(events.leaderNotif, { word });
-          timeout = setTimeout(endGame, 22000);
+          timeout = setTimeout(endGame, 92000);
         }, 5000);
       }
     }
@@ -40,7 +40,7 @@ const socketController = (socket, io) => {
     if (timeout !== null) {
       clearTimeout(timeout);
     }
-    setTimeout(() => startGame(), 2000);
+    setTimeout(() => startGame(), 3000);
   };
 
   const addPoints = (id) => {
@@ -79,8 +79,8 @@ const socketController = (socket, io) => {
   socket.on(events.sendMsg, ({ message }) => {
     if (message === word) {
       superBroadcast(events.newMsg, {
-        message: `Winner is ${socket.nickname}, word was: ${word}`,
-        nickname: "Bot",
+        message: `정답자: ${socket.nickname}, 【단어: ${word}】`,
+        nickname: "관리자",
       });
       addPoints(socket.id);
     } else {

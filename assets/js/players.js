@@ -42,7 +42,7 @@ export const handleLeaderNotif = ({ word }) => {
   showControls();
   showTimebox();
   disableChat();
-  notifs.innerText = `당신이 그릴 차례입니다 📢  【단어: ${word}】`;
+  notifs.innerText = `당신이 그릴 차례입니다 🚨  【단어: ${word}】`;
 };
 
 const timeEnd = (timeFunc) => {
@@ -50,8 +50,8 @@ const timeEnd = (timeFunc) => {
 };
 
 export const handleGameEnded = () => {
-  time = 21;
-  setNotifs("Game ended.");
+  time = 91;
+  setNotifs("게임 종료 📢");
   timeEnd(x);
   disableCanvas();
   hideControls();
@@ -66,13 +66,13 @@ const alertTime = () => {
 export const timer = () => {
   timeEnd(x);
   console.log(time);
-  time = 21;
+  time = 91;
   x = setInterval(() => {
     time--;
     timeCheck.innerHTML = `남은시간 : ${time}`;
     // eslint-disable-next-line no-plusplus
     if (time < 0) {
-      time = 21;
+      time = 91;
       timeCheck.innerHTML = "시간초과";
       timeEnd(x);
     }
