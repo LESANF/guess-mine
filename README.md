@@ -14,3 +14,13 @@ Realtime Drawing Game built with SocketIO, Gulp and Node
 
 https://blooming-sands-78743.herokuapp.com/
 
+- [x] Paint
+- [x] Chat
+- [x] Game
+- [x] Timer
+- [x] Tools Animations
+- [X] Cursor CSS
+- [X] JOIN/OUT Animations
+- [X] Player Board
+- [x] CSS with Gulp
+- [X] LOGIN / Set Nickname
