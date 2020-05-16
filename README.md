@@ -10,9 +10,13 @@
 # guess-mine
 Realtime Drawing Game built with SocketIO, Gulp and Node
 
+## Summary
+
 ## Result    
 
 https://blooming-sands-78743.herokuapp.com/
+
+## Pages :
 
 - [x] Paint
 - [x] Chat
