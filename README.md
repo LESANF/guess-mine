@@ -13,8 +13,11 @@ Realtime Drawing Game built with SocketIO, Gulp and Node
 ## Summary
 - `Front-End`는 `Vanilla JS`
 - `Back-End`는 `Node.js`를 사용하며 웹서버 구축에 사용된 웹프레임워크는 `Express`를 사용
-- `CSS`는 `Gulp`을 이용하여 `SCSS`파일을 변환하여 적용
 - `Stateful` 형식인 `Socket.Io`로 서버 처리
+- `Front`에서 `import/export` 문법을 `JS`에서 처리하기 위해 `Gulp`를 통해 `build`
+- `Gulp`를 통해 `SCSS`, `Babel` 적용
+- `Socket.Io`의 `emit, on`으로 이벤트를 처리
+- 본 프로젝트의 모든 코드는 `Functional programming(함수형 프로그래밍), Divide-and-conquer(분할 정복) 방식으로 
 
 ## Result    
 
