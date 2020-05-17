@@ -17,7 +17,7 @@ Realtime Drawing Game built with SocketIO, Gulp and Node
 - `Front`에서 `import/export` 문법을 `JS`에서 처리하기 위해 `Gulp`를 통해 `build`
 - `Gulp`를 통해 `SCSS`, `Babel` 적용
 - `Socket.Io`의 `emit, on`으로 이벤트를 처리
-- 본 프로젝트의 모든 코드는 `Functional programming(함수형 프로그래밍), Divide-and-conquer(분할 정복) 방식으로 
+- 본 프로젝트의 모든 코드는 `Functional programming(함수형 프로그래밍), Divide-and-conquer(분할 정복)` 방식으로 진행
 
 ## Result    
 
